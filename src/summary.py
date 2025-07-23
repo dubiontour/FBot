@@ -1,0 +1,1 @@
+# TODO: Spielzusammenfassung generieren

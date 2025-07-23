@@ -8,5 +8,5 @@ LEAGUES = {
     "NLA": os.getenv("NLA"),
     "NLB": os.getenv("NLB"),
     "NLC": os.getenv("NLC"),
-    "Dinasty": os.getenv("LEAGUE_C")
+    "Dinasty": os.getenv("Dinasty")
 }

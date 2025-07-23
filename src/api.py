@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from sleeper import get_users, get_rosters, get_matchups, build_matchup_summary
-from config import LEAGUES
+from .sleeper import get_users, get_rosters, get_matchups, build_matchup_summary
+from .config import LEAGUES
 
 app = FastAPI()
 

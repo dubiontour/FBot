@@ -1,23 +1,24 @@
-from fastapi import FastAPI
-from .sleeper import get_users, get_rosters, get_matchups, build_matchup_summary
-from .config import LEAGUES
+from fastapi import FastAPI, HTTPException, Query
+from config import LEAGUES
+from sleeper import get_users, get_rosters, get_matchups, build_matchup_summary
 
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return {"status": "FBot API ist aktiv."}
-
 @app.get("/summary/{league}")
-def summary(league: str, week: int = 1):
+def summary(league: str, week: int = Query(1, ge=1, le=18)):
     league_id = LEAGUES.get(league)
     if not league_id:
-        return {"error": f"Keine League-ID für {league} gefunden."}
+        raise HTTPException(status_code=400, detail=f"Unbekannte Liga: {league}")
+
     try:
         users = get_users(league_id)
         rosters = get_rosters(league_id)
         matchups = get_matchups(league_id, week)
-        result = build_matchup_summary(users, rosters, matchups)
-        return {"matchups": result}
+        summary = build_matchup_summary(users, rosters, matchups)
+        return {
+            "league": league,
+            "week": week,
+            "results": summary or ["Keine Matchups verfügbar"]
+        }
     except Exception as e:
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=f"Fehler beim Abrufen der Liga: {e}")
